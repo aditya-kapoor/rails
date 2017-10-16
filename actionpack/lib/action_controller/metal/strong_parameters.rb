@@ -437,6 +437,7 @@ module ActionController
     def require(key)
       return key.map { |k| require(k) } if key.is_a?(Array)
       value = self[key]
+
       if value.present? || value == false
         value
       else

@@ -38,6 +38,22 @@ class ParametersRequireTest < ActiveSupport::TestCase
     assert_equal(false, ActionController::Parameters.new(person: false).require(:person))
   end
 
+  test "required parameters should only accept and return hashy values" do
+    assert_equal({"name"=>"Aditya"}, ActionController::Parameters.new(person: { name: 'Aditya' }).require(:person).permit(:name).to_hash)
+  end
+
+  test "required parameters must be stringy values" do
+    assert_raises(ActionController::ParameterMissing) do
+      ActionController::Parameters.new(person: 'Aditya').require(:person)
+    end
+  end
+
+  test "required parameters must be integer values" do
+    assert_raises(ActionController::ParameterMissing) do
+      ActionController::Parameters.new(person: 100).require(:person)
+    end
+  end
+
   test "required parameters must not be nil" do
     assert_raises(ActionController::ParameterMissing) do
       ActionController::Parameters.new(person: nil).require(:person)
